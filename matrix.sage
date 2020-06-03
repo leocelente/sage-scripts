@@ -12,3 +12,7 @@ def lsolve(matrix, v):
 def val(x):
     return numerical_approx(x)
 
+def autovv(A):
+    A = Matrix(A)
+    for vector in A.eigenvectors_right():
+        print("Value: ", vector[0], "-> Vector: " , str(vector[1][0]))
