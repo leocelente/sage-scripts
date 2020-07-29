@@ -55,3 +55,16 @@ def phasor(A, theta):
         Returns phasor with value 'A' and phase theta (degrees)
     '''
     return A*expid(theta)
+
+
+def capacitor(farads, freq):
+    return phasor(1/(farads*freq), -90)
+
+def inductor(henries, freq):
+    return phasor((henries*freq), 90)
+
+def parallel(xs):
+    ad = 0
+    for x in xs:
+        ad = ad + 1/x
+    return 1/ad
