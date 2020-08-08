@@ -45,6 +45,48 @@ def escalar_field_line_integral(f=0, r=[1,1,1], a=0,b=0):
     return integral(integrand.full_simplify(), t, 0, 2*pi)
 
 
+def escalar_field_surface_integrand(f, rh):
+    rh = vector(rh)
+    drh = rh.diff(u).cross_product(rh.diff(v))
+    return (f(x=rh[0],y=rh[1],z=rh[2])*drh.norm().full_simplify())
+
+
+def normal_sigma(sigma):
+    sigma_u = vector(map(lambda x: x.diff(u),sigma))
+    sigma_v = vector(map(lambda x: x.diff(v),sigma))
+    return sigma_u.cross_product(sigma_v)
+    
+def sub_sigma(F, sigma):
+    return F.subs(x=sigma[0],y=sigma[1], z=sigma[2])
+    
+def vector_field_surface_integrand(F, sigma, invert_n=False):
+    Fuv = sub_sigma(F, sigma)
+    n = normal_sigma(sigma) *(-1 if invert_n else 1)
+    return Fuv.inner_product(n).full_simplify()
+    
+    
+def divergent(F):
+    return F[0].diff(x) + F[1].diff(y) + F[2].diff(z)
+
+def greens_theorem(F):
+    return (F[1].diff(x) - F[0].diff(y))
+
+def divergent_integrand(F):
+    E = EuclideanSpace(3)    
+    Fe = E.vector_field(F[0],F[1],F[2])
+    return (Fe.div().expr())
+
+def rotational_integrand(F):
+    E = EuclideanSpace(3)    
+    Fe = E.vector_field(F[0],F[1],F[2])
+    lrF = (Fe.curl()[:])
+    return vector([lrF[0].expr(),lrF[1].expr(),lrF[2].expr()])
+
+
+var('x,y,z,t,r,rho,u,v, theta, phi')
+
+
+    
 milli  = (10^-3)
 micro = (10^-6)
 nano  = (10^-9)
